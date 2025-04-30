@@ -55,5 +55,45 @@ namespace WpfAppNet
                 animalEmoji.RemoveAt(index);
             }
         }
+
+        //Обработчик событий 
+        /*Создаем новую переменную типа TextBlock*/
+        TextBlock lastTextBlockClicked;
+
+        /*переменная для совпадения двух элементов*/
+        bool findingMatch = false;
+
+        //метод для обработки событий на textBlock
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+            TextBlock textBlock = sender as TextBlock;
+
+            //Если у нас нет совпадений, тогда
+            if (findingMatch == false)
+            {
+                //прячем данный элемент
+                textBlock.Visibility = Visibility.Hidden;
+                //данный textBlock записываем в переменную, чтобы сравнить со следующим
+                lastTextBlockClicked = textBlock;
+                //ставим что мы начали сравнение
+                findingMatch = true;
+
+            //Если наш последний выбранный элемент совпал с выбранным элементом тогда
+            } else if (lastTextBlockClicked.Text == textBlock.Text)
+            {
+                //новый выбранный элемент мы скрываем
+                textBlock.Visibility = Visibility.Hidden;
+                //выключаем совпдаения
+                findingMatch = false;
+
+                //Если мы не угадали со вторым животным тогда
+            } else
+            {
+                //последнее выбранное животное мы снова делаем видимым
+                lastTextBlockClicked.Visibility = Visibility.Visible;
+                findingMatch = false;
+            }
+        }
     }
 }
