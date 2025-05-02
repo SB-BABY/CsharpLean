@@ -27,6 +27,8 @@ namespace WpfAppNet
         DispatcherTimer timer = new DispatcherTimer();
         int tenthOfSecondsElapsed;
         int matchesFound;
+        //
+        float bestTimer;
 
         public MainWindow()
         {
@@ -36,7 +38,7 @@ namespace WpfAppNet
             timer.Interval = TimeSpan.FromSeconds(.1);
             
             //мы вызываем метод Timer_Tick когда наступит время
-            timer.Tick += Timer_Tick;
+            timer.Tick += Timer_Tick;            
 
             SetUpGame();
         }
@@ -52,12 +54,25 @@ namespace WpfAppNet
                 timer.Stop();
                 timeTextBlock.Text = timeTextBlock.Text + " play again?";
                 //SetUpGame();
+
+                if(bestTimer == 0 || tenthOfSecondsElapsed < bestTimer)
+                {
+                    bestTimer = tenthOfSecondsElapsed;
+                    BestTimeBlock.Visibility = Visibility.Visible;
+                    BestTimeBlock.Text = "Your best time: " + (bestTimer / 10F).ToString("0.0s");
+                } else {
+                    BestTimeBlock.Text = "Your best time: " + (bestTimer / 10F).ToString("0.0s");
+                }
+                
             }
+
         }
 
         /*данный метод необходим для вывода картинки с животными*/
         private void SetUpGame()
         {
+            BestTimeBlock.Text = "";
+
             List<string> animalEmoji = new List<string>()
             {
                 "🐮", "🐮",
@@ -74,7 +89,7 @@ namespace WpfAppNet
 
             foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>())
             {
-                if (textBlock.Name != "timeTextBlock")
+                if (textBlock.Name != "timeTextBlock" && textBlock.Name != "BestTimeBlock")
                 {
                     textBlock.Visibility = Visibility.Visible;
                     int index = random.Next(animalEmoji.Count);
@@ -94,6 +109,7 @@ namespace WpfAppNet
         /*Создаем новую переменную типа TextBlock*/
         TextBlock lastTextBlockClicked;
 
+        
         /*переменная для совпадения двух элементов*/
         bool findingMatch = false;
 
